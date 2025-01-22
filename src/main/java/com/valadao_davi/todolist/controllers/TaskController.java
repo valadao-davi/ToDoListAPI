@@ -1,15 +1,13 @@
 package com.valadao_davi.todolist.controllers;
 
 import com.valadao_davi.todolist.dto.TaskDTO;
+import com.valadao_davi.todolist.entities.Status;
+import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +31,11 @@ public class TaskController {
        }else{
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found");
        }
+    }
+
+    @PostMapping
+    public void createTask(@RequestBody Task task){
+        task.setStatus(Status.PENDING);
+        taskService.createTask(task);
     }
 }
