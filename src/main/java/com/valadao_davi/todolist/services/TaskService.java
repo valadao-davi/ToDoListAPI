@@ -16,8 +16,12 @@ public class TaskService {
 
     @Transactional(readOnly = true)
 
-    public List<TaskDTO> returnAll(){
+    public List<TaskDTO> getAllTasks(){
         return taskRepository.findAll().stream().map(TaskDTO::new).toList();
+    }
+
+    public TaskDTO getById(Long id){
+        return new TaskDTO(taskRepository.findById(id).get());
     }
 
 }
