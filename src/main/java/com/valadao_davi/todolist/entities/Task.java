@@ -13,7 +13,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTask;
     private String nameTask;
-    private Duration timeTask;
+    private Integer timeTask;
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -23,7 +23,7 @@ public class Task {
 
     public Task(){}
 
-    public Task(Long idTask, String nameTask, Duration timeTask, Priority priority) {
+    public Task(Long idTask, String nameTask, Integer timeTask, Priority priority) {
         this.idTask = idTask;
         this.nameTask = nameTask;
         this.timeTask = timeTask;
@@ -47,11 +47,11 @@ public class Task {
         this.nameTask = nameTask;
     }
 
-    public Duration getTimeTask() {
+    public Integer getTimeTask() {
         return timeTask;
     }
 
-    public void setTimeTask(Duration timeTask) {
+    public void setTimeTask(Integer timeTask) {
         this.timeTask = timeTask;
     }
 
