@@ -21,7 +21,9 @@ public class TaskService {
     }
 
     public TaskDTO getById(Long id){
-        return new TaskDTO(taskRepository.findById(id).get());
+        return taskRepository.findById(id)
+                .map(TaskDTO::new)
+                .orElse(null);
     }
 
 }
