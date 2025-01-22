@@ -38,4 +38,15 @@ public class TaskController {
         task.setStatus(Status.PENDING);
         taskService.createTask(task);
     }
+
+    @PutMapping(value = "/start/{id}")
+    public void startTask(@PathVariable Long id){
+        taskService.startTask(id);
+    }
+
+    @PutMapping(value = "/stop/{id}")
+    public void stopTask(@PathVariable Long id){
+        taskService.stopTask(id);
+    }
+
 }
