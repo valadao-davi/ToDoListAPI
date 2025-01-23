@@ -19,9 +19,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
                             ELSE time_task
                            END
             WHERE
-                id_task = :taskId
+                id_task = :taskId;
             """)
-    void updateProgress(Long taskId, String status, Integer time);
+    int updateProgress(Long taskId, String status, Integer time);
 
 
 }

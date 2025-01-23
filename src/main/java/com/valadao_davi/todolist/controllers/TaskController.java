@@ -1,6 +1,7 @@
 package com.valadao_davi.todolist.controllers;
 
 import com.valadao_davi.todolist.dto.TaskDTO;
+import com.valadao_davi.todolist.dto.TaskUpdateDTO;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.services.TaskService;
@@ -34,19 +35,60 @@ public class TaskController {
     }
 
     @PostMapping
-    public void createTask(@RequestBody Task task){
+    public ResponseEntity<?> createTask(@RequestBody Task task){
         task.setStatus(Status.PENDING);
-        taskService.createTask(task);
+        boolean state = taskService.createTask(task);
+        if(state){
+            return ResponseEntity.ok("Task created");
+        }else{
+            return ResponseEntity.status(HttpStatus.valueOf(400)).body("Error while creating task");
+        }
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id){
+        boolean state = taskService.deleteTask(id);
+        if(state){
+            return ResponseEntity.ok("Task deleted");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Error while deleting task");
+        }
     }
 
     @PutMapping(value = "/start/{id}")
-    public void startTask(@PathVariable Long id){
-        taskService.startTask(id);
+    public ResponseEntity<?> startTask(@PathVariable Long id){
+        Integer timeMinutes = taskService.startTask(id);
+        if(timeMinutes != null){
+            boolean typeFinish = taskService.counterMinutes(id, timeMinutes);
+            if(typeFinish){
+                return ResponseEntity.ok().body("Done task.");
+            }else{
+                return  ResponseEntity.ok().body("Task interrupted.");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found.");
     }
 
-    @PutMapping(value = "/stop/{id}")
-    public void stopTask(@PathVariable Long id){
-        taskService.stopTask(id);
+    @PutMapping(value = "/stop")
+    public ResponseEntity<?> stopTask(){
+        boolean state = taskService.stopTask();
+        if(state){
+            return ResponseEntity.ok().body("Task stopped");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("There's no task to stop.");
+
+        }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> editTask(@PathVariable Long id,@RequestBody TaskUpdateDTO taskUpdate){
+        boolean state = taskService.updateTask(taskUpdate, id);
+        if(state){
+            return ResponseEntity.ok().body("Updated task");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error trying to update.");
+
+        }
     }
 
 }

@@ -23,12 +23,12 @@ public class Task {
 
     public Task(){}
 
-    public Task(Long idTask, String nameTask, Integer timeTask, Priority priority) {
+    public Task(Long idTask, String nameTask, Integer timeTask, Priority priority, Status status) {
         this.idTask = idTask;
         this.nameTask = nameTask;
         this.timeTask = timeTask;
         this.priority = priority;
-        status = Status.PENDING;
+        this.status = status;
     }
 
     public Long getIdTask() {

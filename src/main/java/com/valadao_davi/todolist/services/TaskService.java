@@ -1,11 +1,16 @@
 package com.valadao_davi.todolist.services;
 
 import com.valadao_davi.todolist.dto.TaskDTO;
+import com.valadao_davi.todolist.dto.TaskUpdateDTO;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.repositories.TaskRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,10 +18,13 @@ import java.util.List;
 @Service
 public class TaskService {
 
-    private boolean startedTask;
+    private volatile boolean startedTask = false; // Use volatile for thread safety
     private Integer globalDuration;
-    private Thread taskThread;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -26,55 +34,110 @@ public class TaskService {
         return taskRepository.findAll().stream().map(TaskDTO::new).toList();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public TaskDTO getById(Long id){
-        return taskRepository.findById(id)
+        TaskDTO taskDTO =  taskRepository.findById(id)
                 .map(TaskDTO::new)
                 .orElse(null);
+        return taskDTO;
     }
 
     @Transactional
-    public void createTask(Task task){
-        taskRepository.saveAndFlush(task);
-    }
-
-    @Transactional
-    public void startTask(Long id) {
-        globalDuration = getById(id).getTimeTask();
-        taskRepository.updateProgress(id, "IN_PROGRESS", globalDuration);
-        startedTask = true;
-        taskThread = new Thread(() -> {
-            try {
-                while (globalDuration > 0 ) {
-                    if (!startedTask || Thread.currentThread().isInterrupted()) {
-                        throw new InterruptedException();
-                    }
-                    Thread.sleep(1000);
-                    globalDuration -= 1;
-                }
-            } catch (InterruptedException e) {
-                taskRepository.updateProgress(id,"PENDING", globalDuration);
-            } finally {
-                startedTask = false;
-            }
-        });
-
-        taskThread.start();
-
-        try {
-            taskThread.join();
-            taskRepository.updateProgress(id, "DONE", null);
-        } catch (InterruptedException e) {
-            System.out.println("Interrupted");
+    public boolean createTask(Task task){
+        try{
+            taskRepository.saveAndFlush(task);
+            return true;
+        } catch (Exception e){
+            System.out.println("Error occured while trying to delete: " + e.getMessage());
+            return false;
         }
     }
 
     @Transactional
-    public void stopTask(Long id){
-        if(startedTask){
+    public int updateProgress(Long id, String status, Integer globalDuration){
+        return taskRepository.updateProgress(id, status, globalDuration);
+    }
+
+    @Transactional
+    public boolean counterMinutes(Long id, Integer timeDuration){
+        try {
+            this.globalDuration = timeDuration;
+            startedTask = true;
+            while (globalDuration > 0) {
+                if(!startedTask || Thread.currentThread().isInterrupted()){
+                    throw new InterruptedException();
+                }
+                Thread.sleep(1000);
+                globalDuration -= 1;
+            }
+            if(globalDuration == 0){
+                updateProgress(id, Status.DONE.name(), timeDuration);
+                return true;
+            }
+        } catch (InterruptedException e) {
+            updateProgress(id, Status.PENDING.name(), globalDuration); // Update to PENDING on interrupt
+            return false;
+        } finally {
             startedTask = false;
-            taskRepository.updateProgress(id, "PENDING", globalDuration);
-            taskThread.interrupt();
+        }
+        return false;
+    }
+
+    @Transactional
+    public Integer startTask(Long id) {
+        startedTask = true;
+        TaskDTO task = getById(id);
+        int rows = updateProgress(task.getIdTask(), Status.IN_PROGRESS.name(), task.getTimeTask());
+        if(rows > 0){
+            return task.getTimeTask();
+        }
+        return null;
+    }
+
+    @Transactional
+    public boolean stopTask(){
+        if(startedTask){
+            System.out.println("started Task is true");
+            Thread.currentThread().interrupt();
+            startedTask = false;
+            return true;
+        }
+        return false;
+
+    }
+
+    @Transactional
+    public boolean deleteTask(Long id){
+        try{
+            if(taskRepository.existsById(id)){
+                taskRepository.deleteById(id);
+                return true;
+            }else{
+                return false;
+            }
+
+        } catch (Exception e){
+            System.out.println("Error occured while trying to delete: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean updateTask(TaskUpdateDTO taskUpdateDTO, Long id){
+        Task task = taskRepository.findById(id).orElse(null);
+        try{
+            if(task != null){
+                modelMapper.getConfiguration().setSkipNullEnabled(true);
+                modelMapper.map(taskUpdateDTO, task);
+                taskRepository.saveAndFlush(task);
+                return true;
+            }else{
+                return false;
+            }
+
+        } catch (Exception e){
+            System.out.println("Error occured while trying to delete: " + e.getMessage());
+            return false;
         }
     }
 
