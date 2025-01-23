@@ -18,7 +18,7 @@ import java.util.List;
 public class TaskService {
 
     private volatile boolean startedTask = false;
-    private Integer globalDuration;
+    private Double globalDuration;
 
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -49,12 +49,12 @@ public class TaskService {
     }
 
     @Transactional
-    public int updateProgress(Long id, String status, Integer globalDuration){
+    public int updateProgress(Long id, String status, Double globalDuration){
         return taskRepository.updateProgress(id, status, globalDuration);
     }
 
     @Transactional
-    public boolean counterMinutes(Long id, Integer timeDuration){
+    public boolean counterMinutes(Long id, Double timeDuration){
         try {
             this.globalDuration = timeDuration;
             startedTask = true;
@@ -63,7 +63,7 @@ public class TaskService {
                     throw new InterruptedException();
                 }
                 Thread.sleep(1000);
-                globalDuration -= 1;
+                globalDuration -= 0.0167;
             }
             if(globalDuration == 0){
                 updateProgress(id, Status.DONE.name(), timeDuration);
@@ -79,7 +79,7 @@ public class TaskService {
     }
 
     @Transactional
-    public Integer startTask(Long id) {
+    public Double startTask(Long id) {
         startedTask = true;
         TaskDTO task = getById(id);
         int rows = updateProgress(task.getIdTask(), Status.IN_PROGRESS.name(), task.getTimeTask());

@@ -7,7 +7,7 @@ public class TaskUpdateDTO {
 
     private String nameTask;
     private Priority priority;
-    private Integer timeTask;
+    private Double timeTask;
 
     public TaskUpdateDTO(){}
 
@@ -33,11 +33,11 @@ public class TaskUpdateDTO {
         this.priority = priority;
     }
 
-    public Integer getTimeTask() {
+    public Double getTimeTask() {
         return timeTask;
     }
 
-    public void setTimeTask(Integer timeTask) {
+    public void setTimeTask(Double timeTask) {
         this.timeTask = timeTask;
     }
 }

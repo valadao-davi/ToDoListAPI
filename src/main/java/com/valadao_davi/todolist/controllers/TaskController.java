@@ -57,7 +57,7 @@ public class TaskController {
 
     @PutMapping(value = "/start/{id}")
     public ResponseEntity<?> startTask(@PathVariable Long id){
-        Integer timeMinutes = taskService.startTask(id);
+        Double timeMinutes = taskService.startTask(id);
         if(timeMinutes != null){
             boolean typeFinish = taskService.counterMinutes(id, timeMinutes);
             if(typeFinish){
