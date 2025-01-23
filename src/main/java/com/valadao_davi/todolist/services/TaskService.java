@@ -5,8 +5,7 @@ import com.valadao_davi.todolist.dto.TaskUpdateDTO;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.repositories.TaskRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +17,11 @@ import java.util.List;
 @Service
 public class TaskService {
 
-    private volatile boolean startedTask = false; // Use volatile for thread safety
+    private volatile boolean startedTask = false;
     private Integer globalDuration;
 
-    private ModelMapper modelMapper = new ModelMapper();
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
+    private final ModelMapper modelMapper = new ModelMapper();
+    
     @Autowired
     private TaskRepository taskRepository;
 
@@ -36,10 +32,9 @@ public class TaskService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public TaskDTO getById(Long id){
-        TaskDTO taskDTO =  taskRepository.findById(id)
+        return taskRepository.findById(id)
                 .map(TaskDTO::new)
                 .orElse(null);
-        return taskDTO;
     }
 
     @Transactional
