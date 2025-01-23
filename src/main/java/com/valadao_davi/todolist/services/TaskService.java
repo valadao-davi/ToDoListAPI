@@ -82,7 +82,7 @@ public class TaskService {
     public Double startTask(Long id) {
         startedTask = true;
         TaskDTO task = getById(id);
-        int rows = updateProgress(task.getIdTask(), Status.IN_PROGRESS.name(), task.getTimeTask());
+        int rows = task != null ? updateProgress(task.getIdTask(), Status.IN_PROGRESS.name(), task.getTimeTask()) : 0;
         if(rows > 0){
             return task.getTimeTask();
         }
