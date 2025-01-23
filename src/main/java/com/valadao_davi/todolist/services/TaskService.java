@@ -21,7 +21,7 @@ public class TaskService {
     private Integer globalDuration;
 
     private final ModelMapper modelMapper = new ModelMapper();
-    
+
     @Autowired
     private TaskRepository taskRepository;
 
