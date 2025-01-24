@@ -1,3 +1,60 @@
+# TimerToDo API
+
+The Timer API is a RESTful API built with Java Spring and PostgreSQL, designed for task management and time tracking in minutes. It allows you to create, view, edit, and delete tasks, while also tracking their duration in minutes with start/stop functionality. Tasks are initially created with a status of Pending, which changes to In Progress once the timer starts, and transitions to Done when the timer ends. This status tracking ensures that users can easily monitor the progress of their tasks. Scalable and efficient, this API is set to integrate into a full-stack project, offering essential tools for productivity and workflow management.
+
+
+# Features
+
+- **Task Management**: Easily manage tasks with status tracking: Pending, In Progress, and Done.
+- **Time Tracking**: Track task duration in minutes with start/stop timers for precise time management.
+- **PostgreSQL Database**: A scalable database for storing task data, status, and time tracking in minutes.
+- **Docker Compatibility**: Simplifies deployment, ensuring smooth integration and easy setup.
+- **Future Scalability**: Ready for integration into a full-stack project for complete task and time management.
+- **Efficient API Design**: Built with Java Spring for high performance and easy integration.
+- **Architecture Pattern**: Built with the Controller-Service-Repository pattern for better maintainability and scalability.
+# Setup
+
+## 1. Clone repository
+
+```bash
+git clone https://github.com/valadao-davi/ToDoListAPI
+```
+
+## 2. Navigate to the Project Directory
+
+```bash
+cd ToDoListAPI
+```
+
+## 3. Build the Project
+Make sure you have Maven installed. If not, you can install Maven.
+
+
+```bash
+./mvnw clean install
+```
+
+## 4. Docker Setup (Optional)
+If you'd like to run the project inside a Docker container, follow these steps:
+
+### 4.1 Build the docker Image
+In the project directory, create the Docker image using the following command:
+
+```
+docker build -t todolist-api:1.0 .
+```
+
+### 4.2 Run the Docker 
+Now, run the Docker container with the command:
+
+```
+docker run -p 8080:8080 todolist-api
+```
+
+## 5. Verify the Application is Running
+
+Open your browser and navigate to http://localhost:8080/tasks You should see your application running.
+
 
 
 # API Documentation
