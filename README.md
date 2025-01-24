@@ -101,6 +101,7 @@ GET https://todolistapi-9n7j.onrender.com/tasks/:id
 + Example response:
 ```json    
 {
+    "idTask": 1,
     "nameTask": "Clean room",
     "durationTask": 10,
     "priority": "HIGH"
