@@ -2,7 +2,6 @@ package com.valadao_davi.todolist.entities;
 
 import jakarta.persistence.*;
 
-import java.time.Duration;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +13,7 @@ public class Task {
     private Long idTask;
     private String nameTask;
 
-    private Double timeTask;
+    private Double durationTask;
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -24,10 +23,10 @@ public class Task {
 
     public Task(){}
 
-    public Task(Long idTask, String nameTask, Double timeTask, Priority priority, Status status) {
+    public Task(Long idTask, String nameTask, Double durationTask, Priority priority, Status status) {
         this.idTask = idTask;
         this.nameTask = nameTask;
-        this.timeTask = timeTask;
+        this.durationTask = durationTask;
         this.priority = priority;
         this.status = status;
     }
@@ -48,12 +47,12 @@ public class Task {
         this.nameTask = nameTask;
     }
 
-    public Double getTimeTask() {
-        return timeTask;
+    public Double getDurationTask() {
+        return durationTask;
     }
 
-    public void setTimeTask(Double timeTask) {
-        this.timeTask = timeTask;
+    public void setDurationTask(Double durationTask) {
+        this.durationTask = durationTask;
     }
 
     public Priority getPriority() {

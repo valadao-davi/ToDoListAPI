@@ -14,9 +14,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             UPDATE table_task
             SET
                status = :status,
-               time_task = CASE
+               duration_task = CASE
                             WHEN :time IS NOT NULL THEN :time
-                            ELSE time_task
+                            ELSE duration_task
                            END
             WHERE
                 id_task = :taskId;

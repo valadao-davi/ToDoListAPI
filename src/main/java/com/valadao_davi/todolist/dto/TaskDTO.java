@@ -10,7 +10,7 @@ public class TaskDTO {
 
     private Long idTask;
     private String nameTask;
-    private Double timeTask;
+    private Double durationTask;
     private Priority priority;
     private Status status;
 
@@ -36,12 +36,12 @@ public class TaskDTO {
         this.nameTask = nameTask;
     }
 
-    public Double getTimeTask() {
-        return timeTask;
+    public Double getDurationTask() {
+        return durationTask;
     }
 
-    public void setTimeTask(Double timeTask) {
-        this.timeTask = timeTask;
+    public void setDurationTask(Double durationTask) {
+        this.durationTask = durationTask;
     }
 
     public Priority getPriority() {

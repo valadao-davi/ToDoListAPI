@@ -7,14 +7,14 @@ public class TaskUpdateDTO {
 
     private String nameTask;
     private Priority priority;
-    private Double timeTask;
+    private Double durationTask;
 
     public TaskUpdateDTO(){}
 
     public TaskUpdateDTO(Task entity) {
         nameTask = entity.getNameTask();
         priority = entity.getPriority();
-        timeTask = entity.getTimeTask();
+        durationTask = entity.getDurationTask();
     }
 
     public String getNameTask() {
@@ -33,11 +33,11 @@ public class TaskUpdateDTO {
         this.priority = priority;
     }
 
-    public Double getTimeTask() {
-        return timeTask;
+    public Double getDurationTask() {
+        return durationTask;
     }
 
-    public void setTimeTask(Double timeTask) {
-        this.timeTask = timeTask;
+    public void setDurationTask(Double durationTask) {
+        this.durationTask = durationTask;
     }
 }
