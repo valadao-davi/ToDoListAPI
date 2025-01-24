@@ -131,7 +131,7 @@ POST https://todolistapi-9n7j.onrender.com/tasks
 ```
 
  + Example response:
-```json    
+```    
 Task created.
  ```
 
@@ -154,7 +154,7 @@ PUT https://todolistapi-9n7j.onrender.com/tasks
 ```
 
  + Example response:
-```json    
+```    
 Task Edited.
  ```
 
@@ -168,12 +168,12 @@ PUT https://todolistapi-9n7j.onrender.com/tasks/start/:id
 ```
 
  + Example response when duration is finished:
-```json    
+```    
 Done task.
  ```
 
  + Example response when duration is interrupted:
-```json    
+```    
 Task interrupted.
  ```
 
@@ -187,12 +187,12 @@ PUT https://todolistapi-9n7j.onrender.com/tasks/stop/:id
 ```
 
  + Example response when a task is active:
-```json    
+```    
 Task stopped.
  ```
 
  + Example response when there's no task active:
-```json    
+```    
 There's no task to stop.
  ```
 
@@ -208,6 +208,6 @@ DELETE https://todolistapi-9n7j.onrender.com/tasks/:id
 ```
 
 + Example response:
-```json    
+```    
 Task deleted.
  ```
