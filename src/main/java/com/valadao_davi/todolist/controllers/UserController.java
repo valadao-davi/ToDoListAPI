@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable Long userId){
-        UserMinProjection user = userService.getById(userId);
+    public ResponseEntity<?> getMinUser(@PathVariable Long userId){
+        UserMinProjection user = userService.getMinUser(userId);
         if(user != null){
             return ResponseEntity.ok(user);
         }else{
