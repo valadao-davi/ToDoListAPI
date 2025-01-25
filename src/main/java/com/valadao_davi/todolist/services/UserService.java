@@ -1,7 +1,7 @@
 package com.valadao_davi.todolist.services;
 
 import com.valadao_davi.todolist.dto.UserDTO;
-import com.valadao_davi.todolist.entities.User;
+import com.valadao_davi.todolist.projections.UserProjection;
 import com.valadao_davi.todolist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +16,8 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<UserDTO> getAllUsers(){
-        List<UserDTO> userDTOS = userRepository.findAll().stream().map(UserDTO::new).toList();
-        return userDTOS;
+    public List<UserProjection> getAllUsers(){
+        return userRepository.findAllBy().stream().toList();
     }
 
 }

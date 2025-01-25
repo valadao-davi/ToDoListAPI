@@ -12,7 +12,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Long userId;
 
     private String userName;
     private String email;
@@ -21,7 +21,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> listTasks = new ArrayList<>();
 
-    public User(Integer userId, String userName, String email, String password) {
+    public User(Long userId, String userName, String email, String password) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
@@ -30,11 +30,11 @@ public class User {
 
     public User(){}
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
