@@ -15,6 +15,10 @@ public class Task {
 
     private Double durationTask;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Enumerated(EnumType.STRING)
     private Priority priority;
 
@@ -23,10 +27,11 @@ public class Task {
 
     public Task(){}
 
-    public Task(Long idTask, String nameTask, Double durationTask, Priority priority, Status status) {
+    public Task(Long idTask, String nameTask, Double durationTask, User user, Priority priority, Status status) {
         this.idTask = idTask;
         this.nameTask = nameTask;
         this.durationTask = durationTask;
+        this.user = user;
         this.priority = priority;
         this.status = status;
     }
@@ -82,5 +87,9 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hashCode(getIdTask());
+    }
+
+    public User getUser() {
+        return user;
     }
 }
