@@ -1,15 +1,17 @@
 package com.valadao_davi.todolist.dto;
 
+import com.valadao_davi.todolist.entities.User;
+
 public class UserDTO {
 
     private String userName;
     private String email;
     private String password;
 
-    public UserDTO(String userName, String password, String email) {
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
+    public UserDTO(User entity) {
+        this.userName = entity.getUserName();
+        this.password = entity.getPassword();
+        this.email = entity.getEmail();
     }
 
     public String getUserName() {

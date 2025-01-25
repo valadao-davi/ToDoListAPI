@@ -1,6 +1,5 @@
 package com.valadao_davi.todolist.repositories;
 
-import com.valadao_davi.todolist.dto.TaskDTO;
 import com.valadao_davi.todolist.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
