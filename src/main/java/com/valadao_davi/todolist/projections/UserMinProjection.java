@@ -1,9 +1,6 @@
 package com.valadao_davi.todolist.projections;
 
-
-public interface UserProjection {
-    Long getUserId();
+public interface UserMinProjection {
     String getUserName();
     String getEmail();
-    String getPassword();
 }
