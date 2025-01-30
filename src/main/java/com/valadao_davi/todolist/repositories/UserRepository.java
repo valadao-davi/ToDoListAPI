@@ -1,5 +1,6 @@
 package com.valadao_davi.todolist.repositories;
 
+import com.valadao_davi.todolist.dto.UserDTO;
 import com.valadao_davi.todolist.entities.User;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import org.springframework.data.jpa.repository.JpaRepository;

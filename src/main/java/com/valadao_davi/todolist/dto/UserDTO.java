@@ -2,6 +2,8 @@ package com.valadao_davi.todolist.dto;
 
 import com.valadao_davi.todolist.entities.User;
 
+import java.util.Objects;
+
 public class UserDTO {
 
     private Long userId;
@@ -14,6 +16,12 @@ public class UserDTO {
         this.userName = entity.getUserName();
         this.password = entity.getPassword();
         this.email = entity.getEmail();
+    }
+
+    public UserDTO(UserCreateDTO entity){
+        this.userName = entity.getUserName();
+        this.email = entity.getPassword();
+        this.password = entity.getPassword();
     }
 
     public Long getUserId() {
@@ -42,5 +50,18 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDTO userDTO = (UserDTO) o;
+        return Objects.equals(getUserName(), userDTO.getUserName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getUserName());
     }
 }

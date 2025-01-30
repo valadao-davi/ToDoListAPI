@@ -1,5 +1,6 @@
 package com.valadao_davi.todolist.entities;
 
+import com.valadao_davi.todolist.dto.UserDTO;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> listTasks = new ArrayList<>();
 
+    public User(){}
+
     public User(Long userId, String userName, String email, String password) {
         this.userId = userId;
         this.userName = userName;
@@ -28,7 +31,11 @@ public class User {
         this.password = password;
     }
 
-    public User(){}
+    public User(UserDTO entity){
+        this.email = entity.getEmail();
+        this.userName = entity.getUserName();
+        this.password = entity.getPassword();
+    }
 
     public Long getUserId() {
         return userId;
