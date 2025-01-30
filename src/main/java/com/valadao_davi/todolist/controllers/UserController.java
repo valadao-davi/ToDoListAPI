@@ -2,6 +2,8 @@ package com.valadao_davi.todolist.controllers;
 
 
 import com.valadao_davi.todolist.dto.UserCreateDTO;
+import com.valadao_davi.todolist.exceptions.UserNotFoundException;
+import com.valadao_davi.todolist.exceptions.UserRegisteredException;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,11 @@ public class UserController {
 
     @GetMapping(value = "/user/{userId}")
     public ResponseEntity<?> getMinUser(@PathVariable Long userId){
-        UserMinProjection user = userService.getMinUser(userId);
-        if(user != null){
+        try{
+            UserMinProjection user = userService.getMinUser(userId);
             return ResponseEntity.ok(user);
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -38,8 +40,8 @@ public class UserController {
         try{
             userService.registerUser(userCreateDTO);
             return ResponseEntity.ok("User created");
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email already registered");
+        }catch (UserRegisteredException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
     }
 }

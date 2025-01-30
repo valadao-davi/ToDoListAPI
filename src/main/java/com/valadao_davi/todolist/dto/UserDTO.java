@@ -20,7 +20,7 @@ public class UserDTO {
 
     public UserDTO(UserCreateDTO entity){
         this.userName = entity.getUserName();
-        this.email = entity.getPassword();
+        this.email = entity.getEmail();
         this.password = entity.getPassword();
     }
 
@@ -57,11 +57,21 @@ public class UserDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDTO userDTO = (UserDTO) o;
-        return Objects.equals(getUserName(), userDTO.getUserName());
+        return Objects.equals(getEmail(), userDTO.getEmail());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getUserName());
+        return Objects.hashCode(getEmail());
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

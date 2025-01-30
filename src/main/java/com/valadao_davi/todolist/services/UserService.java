@@ -3,6 +3,8 @@ package com.valadao_davi.todolist.services;
 import com.valadao_davi.todolist.dto.UserCreateDTO;
 import com.valadao_davi.todolist.dto.UserDTO;
 import com.valadao_davi.todolist.entities.User;
+import com.valadao_davi.todolist.exceptions.UserNotFoundException;
+import com.valadao_davi.todolist.exceptions.UserRegisteredException;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,32 +26,24 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserMinProjection getMinUser(Long userId){
-        return userRepository.findByUserId(userId).orElse(null);
+        return userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
     }
 
     private List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map(UserDTO::new).toList();
     }
 
-    @Transactional
-    private UserDTO getUserById(Long userId){
-        return userRepository.findById(userId).map(UserDTO::new).orElse(null);
-    }
 
     @Transactional
     public void registerUser(UserCreateDTO userCreate){
         List<UserDTO> users = getAllUsers();
         UserDTO userDTO = new UserDTO(userCreate);
-        try{
-            boolean contains = users.contains(userDTO);
-            if(contains){
-                throw new IllegalArgumentException("Email already registered.");
-            }else{
-                userRepository.saveAndFlush(new User(userDTO));
-            }
-        }catch (IllegalArgumentException e){
-            throw new IllegalArgumentException(e.getMessage());
+        if(users.contains(userDTO)){
+            throw new UserRegisteredException();
         }
+        System.out.println(userDTO);
+        userRepository.saveAndFlush(new User(userDTO));
+
     }
 
 }
