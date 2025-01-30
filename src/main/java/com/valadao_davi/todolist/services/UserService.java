@@ -7,6 +7,7 @@ import com.valadao_davi.todolist.exceptions.UserNotFoundException;
 import com.valadao_davi.todolist.exceptions.UserRegisteredException;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,6 @@ public class UserService {
         return userRepository.findAll().stream().map(UserDTO::new).toList();
     }
 
-
     @Transactional
     public void registerUser(UserCreateDTO userCreate){
         List<UserDTO> users = getAllUsers();
@@ -41,9 +41,16 @@ public class UserService {
         if(users.contains(userDTO)){
             throw new UserRegisteredException();
         }
-        System.out.println(userDTO);
         userRepository.saveAndFlush(new User(userDTO));
+    }
 
+    @Transactional
+    public void editUser(UserCreateDTO userEdit, Long userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(userEdit, user);
+        userRepository.save(user);
     }
 
 }

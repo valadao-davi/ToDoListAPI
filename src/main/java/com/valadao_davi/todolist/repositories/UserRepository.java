@@ -14,5 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<UserMinProjection> findByUserId(Long userId);
 
+
 }
 

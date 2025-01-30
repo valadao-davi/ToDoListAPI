@@ -27,21 +27,19 @@ public class UserController {
 
     @GetMapping(value = "/user/{userId}")
     public ResponseEntity<?> getMinUser(@PathVariable Long userId){
-        try{
-            UserMinProjection user = userService.getMinUser(userId);
-            return ResponseEntity.ok(user);
-        }catch (UserNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        UserMinProjection user = userService.getMinUser(userId);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(value = "/user")
     public ResponseEntity<String> registerUser(@RequestBody UserCreateDTO userCreateDTO){
-        try{
             userService.registerUser(userCreateDTO);
             return ResponseEntity.ok("User created");
-        }catch (UserRegisteredException e){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-        }
+    }
+
+    @PutMapping(value = "/user/{userId}")
+    public ResponseEntity<String> editUser(@RequestBody UserCreateDTO userCreateDTO, @PathVariable Long userId){
+        userService.editUser(userCreateDTO, userId);
+        return ResponseEntity.ok("User edited");
     }
 }
