@@ -1,13 +1,8 @@
 package com.valadao_davi.todolist.controllers;
-
-
 import com.valadao_davi.todolist.dto.UserCreateDTO;
-import com.valadao_davi.todolist.exceptions.UserNotFoundException;
-import com.valadao_davi.todolist.exceptions.UserRegisteredException;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
