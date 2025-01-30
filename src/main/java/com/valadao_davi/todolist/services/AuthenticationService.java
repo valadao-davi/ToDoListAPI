@@ -2,7 +2,9 @@ package com.valadao_davi.todolist.services;
 
 import com.valadao_davi.todolist.dto.UserCreateDTO;
 import com.valadao_davi.todolist.dto.UserLoginDTO;
+import com.valadao_davi.todolist.entities.User;
 import com.valadao_davi.todolist.exceptions.UserRegisteredException;
+import com.valadao_davi.todolist.infra.TokenService;
 import com.valadao_davi.todolist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,9 +24,16 @@ public class AuthenticationService {
     @Autowired
     private UserService userService;
 
-    public void login(UserLoginDTO userLoginDTO){
+    @Autowired
+    private TokenService tokenService;
+
+    public String login(UserLoginDTO userLoginDTO){
         var userNamePassword = new UsernamePasswordAuthenticationToken(userLoginDTO.email(),userLoginDTO.password());
         var auth = authenticationManager.authenticate(userNamePassword);
+
+        String token = tokenService.generateToken((User) auth.getPrincipal());
+        return token;
+
     }
 
     public void register(UserCreateDTO userCreateDTO){
