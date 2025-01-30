@@ -3,6 +3,7 @@ package com.valadao_davi.todolist.services;
 import com.valadao_davi.todolist.dto.UserCreateDTO;
 import com.valadao_davi.todolist.dto.UserDTO;
 import com.valadao_davi.todolist.entities.User;
+import com.valadao_davi.todolist.exceptions.RegisterException;
 import com.valadao_davi.todolist.exceptions.UserNotFoundException;
 import com.valadao_davi.todolist.exceptions.UserRegisteredException;
 import com.valadao_davi.todolist.projections.UserMinProjection;
@@ -36,12 +37,17 @@ public class UserService {
 
     @Transactional
     public void registerUser(UserCreateDTO userCreate){
+        if(userCreate.getUserName() == null || userCreate.getEmail() == null || userCreate.getPassword() == null){
+            throw new RegisterException();
+        }
         List<UserDTO> users = getAllUsers();
         UserDTO userDTO = new UserDTO(userCreate);
         if(users.contains(userDTO)){
             throw new UserRegisteredException();
         }
         userRepository.saveAndFlush(new User(userDTO));
+
+
     }
 
     @Transactional

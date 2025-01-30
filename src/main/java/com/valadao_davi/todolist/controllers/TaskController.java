@@ -35,14 +35,10 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTask(@RequestBody Task task){
+    public ResponseEntity<?> createTask(@RequestBody TaskDTO task){
         task.setStatus(Status.PENDING);
-        boolean state = taskService.createTask(task);
-        if(state){
-            return ResponseEntity.ok("Task created");
-        }else{
-            return ResponseEntity.status(HttpStatus.valueOf(400)).body("Error while creating task");
-        }
+        taskService.createTask(task);
+        return ResponseEntity.ok("Task created");
     }
 
     @DeleteMapping(value = "/{id}")

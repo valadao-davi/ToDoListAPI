@@ -4,8 +4,12 @@ import com.valadao_davi.todolist.dto.TaskDTO;
 import com.valadao_davi.todolist.dto.TaskUpdateDTO;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
+import com.valadao_davi.todolist.entities.User;
+import com.valadao_davi.todolist.exceptions.RegisterException;
+import com.valadao_davi.todolist.exceptions.UserNotFoundException;
 import com.valadao_davi.todolist.repositories.TaskRepository;
 
+import com.valadao_davi.todolist.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,9 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Transactional(readOnly = true)
     public List<TaskDTO> getAllTasks(){
         return taskRepository.findAll().stream().map(TaskDTO::new).toList();
@@ -37,15 +44,17 @@ public class TaskService {
                 .orElse(null);
     }
 
-    @Transactional
-    public boolean createTask(Task task){
-        try{
-            taskRepository.saveAndFlush(task);
-            return true;
-        } catch (Exception e){
-            System.out.println("Error occured while trying to delete: " + e.getMessage());
-            return false;
+    @Transactional(rollbackFor = Exception.class)
+    public void createTask(TaskDTO taskDTO){
+        if(taskDTO.getUserId() == null || taskDTO.getNameTask() == null || taskDTO.getDurationTask() == null || taskDTO.getPriority() == null ){
+            throw new RegisterException();
         }
+        User user = userRepository.findById(taskDTO.getUserId()).orElseThrow(UserNotFoundException::new);
+        Task task = new Task();
+        modelMapper.map(taskDTO, task);
+        task.setUser(user);
+        taskRepository.saveAndFlush(task);
+
     }
 
     @Transactional

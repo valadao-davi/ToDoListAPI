@@ -1,5 +1,6 @@
 package com.valadao_davi.todolist.entities;
 
+import com.valadao_davi.todolist.dto.TaskDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class Task {
 
     public Task(){}
 
+
     public Task(Long idTask, String nameTask, Double durationTask, User user, Priority priority, Status status) {
         this.idTask = idTask;
         this.nameTask = nameTask;
@@ -35,6 +37,8 @@ public class Task {
         this.priority = priority;
         this.status = status;
     }
+
+
 
     public Long getIdTask() {
         return idTask;
@@ -91,5 +95,9 @@ public class Task {
 
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,11 +1,13 @@
 package com.valadao_davi.todolist.dto;
 
+
+import jakarta.validation.constraints.NotBlank;
+
 public class UserCreateDTO {
 
     private String userName;
     private String email;
     private String password;
-
 
     public UserCreateDTO() {
 

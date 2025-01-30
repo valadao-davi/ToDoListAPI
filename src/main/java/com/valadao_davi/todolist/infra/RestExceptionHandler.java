@@ -1,4 +1,5 @@
 package com.valadao_davi.todolist.infra;
+import com.valadao_davi.todolist.exceptions.RegisterException;
 import com.valadao_davi.todolist.exceptions.UserNotFoundException;
 import com.valadao_davi.todolist.exceptions.UserRegisteredException;
 import org.springframework.http.HttpStatus;
@@ -21,5 +22,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(threatResponse);
     }
+
+    @ExceptionHandler(RegisterException.class)
+    private ResponseEntity<RestErrorMessage> registerHandler(RegisterException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_ACCEPTABLE, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(threatResponse);
+    }
+
 
 }
