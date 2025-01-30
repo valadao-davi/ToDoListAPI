@@ -2,6 +2,7 @@ package com.valadao_davi.todolist.repositories;
 import com.valadao_davi.todolist.entities.User;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -13,7 +14,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<UserMinProjection> findAllBy();
 
-    Optional<UserMinProjection> findByUserId(Long userId);
+    @Query("SELECT u FROM User u WHERE u.email = :email")
+    Optional<UserMinProjection> getUserProfile(String email);
+
 
 
 }

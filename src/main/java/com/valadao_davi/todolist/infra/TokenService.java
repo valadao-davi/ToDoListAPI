@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -23,12 +22,11 @@ public class TokenService {
     public String generateToken(User user){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create()
+            return JWT.create()
                     .withIssuer("auth-todolist")
                     .withSubject(user.getEmail())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
-            return token;
         }catch (JWTCreationException e){
             throw new JWTErrorException("Error while generating token: " + e.getMessage());
         }
@@ -37,11 +35,12 @@ public class TokenService {
     public String validateToken(String token){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
+            String tokenValidate = JWT.require(algorithm)
                     .withIssuer("auth-todolist")
                     .build()
                     .verify(token)
                     .getSubject();
+            return tokenValidate;
         }catch (JWTVerificationException e){
             return "";
         }

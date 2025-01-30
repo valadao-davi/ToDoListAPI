@@ -10,6 +10,8 @@ import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +29,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserMinProjection getMinUser(Long userId){
-        return userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
+    public UserMinProjection getProfile(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        return userRepository.getUserProfile(email).orElseThrow(UserNotFoundException::new);
     }
+
 
     private List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map(UserDTO::new).toList();
