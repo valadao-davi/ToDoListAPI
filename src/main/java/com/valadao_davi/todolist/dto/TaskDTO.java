@@ -3,7 +3,6 @@ package com.valadao_davi.todolist.dto;
 import com.valadao_davi.todolist.entities.Priority;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
-import org.springframework.beans.BeanUtils;
 
 
 public class TaskDTO {
@@ -67,5 +66,9 @@ public class TaskDTO {
 
     public Long getUserId() {
         return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

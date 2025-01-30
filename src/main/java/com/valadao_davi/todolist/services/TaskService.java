@@ -2,6 +2,7 @@ package com.valadao_davi.todolist.services;
 
 import com.valadao_davi.todolist.dto.TaskDTO;
 import com.valadao_davi.todolist.dto.TaskUpdateDTO;
+import com.valadao_davi.todolist.dto.TaskUsernamesDTO;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.entities.User;
@@ -39,10 +40,15 @@ public class TaskService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<TaskUsernamesDTO> tasksByUserId(Long userid){
+        return taskRepository.tasksByUserId(userid);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public TaskDTO getById(Long id){
         return taskRepository.findById(id)
                 .map(TaskDTO::new)
-                .orElseThrow(TaskNotFoundException::new);
+                .orElse(null);
     }
 
     @Transactional(rollbackFor = Exception.class)

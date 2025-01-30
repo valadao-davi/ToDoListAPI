@@ -17,16 +17,12 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private TokenService tokenService;
-
-    @Autowired
     private UserService userService;
 
     @GetMapping(value = "/users")
     public List<UserMinProjection> getAllUsers() {
         return userService.getAllSafeUsers();
     }
-
 
     @GetMapping(value = "/profile")
     public ResponseEntity<?> getProfile(){
