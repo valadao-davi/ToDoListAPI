@@ -34,12 +34,18 @@ public class UserController {
     @PostMapping(value = "/user")
     public ResponseEntity<String> registerUser(@RequestBody UserCreateDTO userCreateDTO){
             userService.registerUser(userCreateDTO);
-            return ResponseEntity.ok("User created");
+            return ResponseEntity.ok("User created.");
     }
 
     @PutMapping(value = "/user/{userId}")
     public ResponseEntity<String> editUser(@RequestBody UserCreateDTO userCreateDTO, @PathVariable Long userId){
         userService.editUser(userCreateDTO, userId);
-        return ResponseEntity.ok("User edited");
+        return ResponseEntity.ok("User edited.");
+    }
+
+    @DeleteMapping(value = "/user/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId){
+        userService.deleteUser(userId);
+        return ResponseEntity.ok("User deleted.");
     }
 }
