@@ -27,7 +27,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
     @Query(nativeQuery = true, value = """
-            SELECT t.id_task AS taskId, t.nameTask, t.status, t.priority, t.duration, u.user_name AS userName
+            SELECT t.id_task AS taskId, t.name_task AS nameTask, t.status as status, t.priority as priority, t.duration_task as durationTask, u.user_name AS userName
             FROM table_task t
             JOIN table_user u ON t.user_id = u.user_id
             WHERE u.user_id = :userId;
