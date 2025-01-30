@@ -6,6 +6,7 @@ import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.entities.User;
 import com.valadao_davi.todolist.exceptions.RegisterException;
+import com.valadao_davi.todolist.exceptions.TaskNotFoundException;
 import com.valadao_davi.todolist.exceptions.UserNotFoundException;
 import com.valadao_davi.todolist.repositories.TaskRepository;
 
@@ -41,7 +42,7 @@ public class TaskService {
     public TaskDTO getById(Long id){
         return taskRepository.findById(id)
                 .map(TaskDTO::new)
-                .orElse(null);
+                .orElseThrow(TaskNotFoundException::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -63,7 +64,7 @@ public class TaskService {
     }
 
     @Transactional
-    public boolean counterMinutes(Long id, Double timeDuration){
+    public void counterMinutes(Long id, Double timeDuration){
         try {
             this.globalDuration = timeDuration;
             startedTask = true;
@@ -76,17 +77,15 @@ public class TaskService {
             }
             if(globalDuration == 0){
                 updateProgress(id, Status.DONE.name(), timeDuration);
-                return true;
             }
         } catch (InterruptedException e) {
-            updateProgress(id, Status.PENDING.name(), globalDuration); // Update to PENDING on interrupt
-            return false;
+            updateProgress(id, Status.PENDING.name(), globalDuration);
         } finally {
             startedTask = false;
         }
-        return false;
     }
 
+    // Returns time duration of a task
     @Transactional
     public Double startTask(Long id) {
         startedTask = true;
@@ -99,50 +98,31 @@ public class TaskService {
     }
 
     @Transactional
-    public boolean stopTask(){
+    public void stopTask(){
         if(startedTask){
-            System.out.println("started Task is true");
             Thread.currentThread().interrupt();
             startedTask = false;
-            return true;
+        }else{
+            throw new TaskNotFoundException("There's no task to stop");
         }
-        return false;
 
     }
 
     @Transactional
-    public boolean deleteTask(Long id){
-        try{
-            if(taskRepository.existsById(id)){
-                taskRepository.deleteById(id);
-                return true;
-            }else{
-                return false;
-            }
-
-        } catch (Exception e){
-            System.out.println("Error occured while trying to delete: " + e.getMessage());
-            return false;
+    public void deleteTask(Long id){
+        if(taskRepository.existsById(id)){
+            taskRepository.deleteById(id);
+        }else {
+            throw new TaskNotFoundException();
         }
     }
 
     @Transactional
-    public boolean updateTask(TaskUpdateDTO taskUpdateDTO, Long id){
-        Task task = taskRepository.findById(id).orElse(null);
-        try{
-            if(task != null){
-                modelMapper.getConfiguration().setSkipNullEnabled(true);
-                modelMapper.map(taskUpdateDTO, task);
-                taskRepository.saveAndFlush(task);
-                return true;
-            }else{
-                return false;
-            }
-
-        } catch (Exception e){
-            System.out.println("Error occured while trying to delete: " + e.getMessage());
-            return false;
-        }
+    public void updateTask(TaskUpdateDTO taskUpdateDTO, Long id){
+        Task task = taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(taskUpdateDTO, task);
+        taskRepository.saveAndFlush(task);
     }
 
 }
