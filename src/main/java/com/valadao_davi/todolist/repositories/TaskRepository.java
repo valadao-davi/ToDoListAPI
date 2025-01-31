@@ -1,7 +1,7 @@
 package com.valadao_davi.todolist.repositories;
 
-import com.valadao_davi.todolist.dto.TaskUsernamesDTO;
 import com.valadao_davi.todolist.entities.Task;
+import com.valadao_davi.todolist.projections.TaskProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,11 +27,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
     @Query(nativeQuery = true, value = """
-            SELECT t.id_task AS taskId, t.name_task AS nameTask, t.status as status, t.priority as priority, t.duration_task as durationTask, u.user_name AS userName
+            SELECT t.id_task AS idTask,
+                   t.name_task AS nameTask,
+                   t.status AS status,
+                   t.priority AS priority,
+                   t.duration_task AS durationTask
             FROM table_task t
-            JOIN table_user u ON t.user_id = u.user_id
-            WHERE u.user_id = :userId;
+            WHERE t.user_id = :userId;
             """)
-    List<TaskUsernamesDTO> tasksByUserId(Long userId);
+    List<TaskProjection> tasksByUserId(Long userId);
 
 }

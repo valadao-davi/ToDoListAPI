@@ -2,8 +2,8 @@ package com.valadao_davi.todolist.controllers;
 
 import com.valadao_davi.todolist.dto.TaskDTO;
 import com.valadao_davi.todolist.dto.TaskUpdateDTO;
-import com.valadao_davi.todolist.dto.TaskUsernamesDTO;
 import com.valadao_davi.todolist.entities.Status;
+import com.valadao_davi.todolist.projections.TaskProjection;
 import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.services.TaskService;
 import com.valadao_davi.todolist.services.UserService;
@@ -25,7 +25,7 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public List<TaskUsernamesDTO> getAllTasks(){
+    public List<TaskProjection> getAllTasks(){
         UserMinProjection user = userService.getProfile();
         return taskService.tasksByUserId(user.getUserId());
     }

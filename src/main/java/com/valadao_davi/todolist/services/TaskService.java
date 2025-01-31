@@ -2,13 +2,13 @@ package com.valadao_davi.todolist.services;
 
 import com.valadao_davi.todolist.dto.TaskDTO;
 import com.valadao_davi.todolist.dto.TaskUpdateDTO;
-import com.valadao_davi.todolist.dto.TaskUsernamesDTO;
 import com.valadao_davi.todolist.entities.Status;
 import com.valadao_davi.todolist.entities.Task;
 import com.valadao_davi.todolist.entities.User;
 import com.valadao_davi.todolist.exceptions.RegisterException;
 import com.valadao_davi.todolist.exceptions.TaskNotFoundException;
 import com.valadao_davi.todolist.exceptions.UserNotFoundException;
+import com.valadao_davi.todolist.projections.TaskProjection;
 import com.valadao_davi.todolist.repositories.TaskRepository;
 
 import com.valadao_davi.todolist.repositories.UserRepository;
@@ -40,7 +40,7 @@ public class TaskService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<TaskUsernamesDTO> tasksByUserId(Long userid){
+    public List<TaskProjection> tasksByUserId(Long userid){
         return taskRepository.tasksByUserId(userid);
     }
 
