@@ -35,12 +35,11 @@ public class TokenService {
     public String validateToken(String token){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String tokenValidate = JWT.require(algorithm)
+            return JWT.require(algorithm)
                     .withIssuer("auth-todolist")
                     .build()
                     .verify(token)
                     .getSubject();
-            return tokenValidate;
         }catch (JWTVerificationException e){
             return "";
         }
