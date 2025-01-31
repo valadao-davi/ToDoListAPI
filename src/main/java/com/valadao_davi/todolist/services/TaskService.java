@@ -23,8 +23,8 @@ import java.util.List;
 @Service
 public class TaskService {
 
-    private volatile boolean startedTask = false;
-    private Double globalDuration;
+//    private volatile boolean startedTask = false;
+//    private Double globalDuration;
 
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -45,10 +45,9 @@ public class TaskService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public TaskDTO getById(Long id){
-        return taskRepository.findById(id)
-                .map(TaskDTO::new)
-                .orElse(null);
+    public TaskProjection getById(Long id){
+        return taskRepository.findByidTask(id)
+                .orElseThrow(TaskNotFoundException::new);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -65,51 +64,57 @@ public class TaskService {
     }
 
     @Transactional
-    public int updateProgress(Long id, String status, Double globalDuration){
-        return taskRepository.updateProgress(id, status, globalDuration);
+    public TaskProjection updateProgress(Long id, String status, Double globalDuration){
+        taskRepository.updateProgress(id, status, globalDuration);
+        return getById(id);
+    }
+
+//    @Transactional
+//    public void counterMinutes(Long id, Double timeDuration){
+//        try {
+//            this.globalDuration = timeDuration;
+//            startedTask = true;
+//            while (globalDuration > 0) {
+//                if(!startedTask || Thread.currentThread().isInterrupted()){
+//                    throw new InterruptedException();
+//                }
+//                Thread.sleep(1000);
+//                globalDuration -= 0.0167;
+//            }
+//            if(globalDuration == 0){
+//                updateProgress(id, Status.DONE.name(), timeDuration);
+//            }
+//        } catch (InterruptedException e) {
+//            updateProgress(id, Status.PENDING.name(), globalDuration);
+//        } finally {
+//            startedTask = false;
+//        }
+//    }
+
+    @Transactional
+    public TaskProjection startTask(Long id) {
+        TaskProjection task = getById(id);
+        return updateProgress(task.getIdTask(), Status.IN_PROGRESS.name(), task.getDurationTask());
     }
 
     @Transactional
-    public void counterMinutes(Long id, Double timeDuration){
-        try {
-            this.globalDuration = timeDuration;
-            startedTask = true;
-            while (globalDuration > 0) {
-                if(!startedTask || Thread.currentThread().isInterrupted()){
-                    throw new InterruptedException();
-                }
-                Thread.sleep(1000);
-                globalDuration -= 0.0167;
-            }
-            if(globalDuration == 0){
-                updateProgress(id, Status.DONE.name(), timeDuration);
-            }
-        } catch (InterruptedException e) {
-            updateProgress(id, Status.PENDING.name(), globalDuration);
-        } finally {
-            startedTask = false;
-        }
-    }
-
-    // Returns time duration of a task
-    @Transactional
-    public Double startTask(Long id) {
-        startedTask = true;
-        TaskDTO task = getById(id);
-        int rows = task != null ? updateProgress(task.getIdTask(), Status.IN_PROGRESS.name(), task.getDurationTask()) : 0;
-        if(rows > 0){
-            return task.getDurationTask();
-        }
-        return null;
-    }
-
-    @Transactional
-    public void stopTask(){
-        if(startedTask){
-            Thread.currentThread().interrupt();
-            startedTask = false;
+    public TaskProjection finishTask(Long id){
+        TaskProjection task = getById(id);
+        if(!task.getStatus().toString().equals("IN_PROGRESS")){
+            throw new TaskNotFoundException("There's no task to finish");
         }else{
+            return updateProgress(task.getIdTask(), Status.DONE.name(), task.getDurationTask());
+        }
+    }
+
+    @Transactional
+    public TaskProjection stopTask(Long id, Double actualDuration){
+        TaskProjection task = getById(id);
+        if(!task.getStatus().toString().equals("IN_PROGRESS")){
             throw new TaskNotFoundException("There's no task to stop");
+        }else{
+            Double difference = task.getDurationTask() - actualDuration;
+            return updateProgress(task.getIdTask(), Status.PENDING.name(), difference);
         }
 
     }

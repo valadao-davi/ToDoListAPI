@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -36,5 +37,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             WHERE t.user_id = :userId;
             """)
     List<TaskProjection> tasksByUserId(Long userId);
+
+    Optional<TaskProjection> findByidTask(Long taskId);
+
 
 }

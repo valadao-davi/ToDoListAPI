@@ -1,5 +1,6 @@
 package com.valadao_davi.todolist.controllers;
 
+import com.valadao_davi.todolist.dto.ActualDuration;
 import com.valadao_davi.todolist.dto.TaskDTO;
 import com.valadao_davi.todolist.dto.TaskUpdateDTO;
 import com.valadao_davi.todolist.entities.Status;
@@ -50,20 +51,23 @@ public class TaskController {
         return ResponseEntity.ok("Task deleted");
     }
 
+
     @PutMapping(value = "/start/{id}")
-    public ResponseEntity<?> startTask(@PathVariable Long id){
-        Double timeMinutes = taskService.startTask(id);
-        if(timeMinutes != null && timeMinutes > 0){
-            taskService.counterMinutes(id, timeMinutes);
-        }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Task interrupted.");
+    public ResponseEntity<TaskProjection> startTask(@PathVariable Long id){
+        return ResponseEntity.ok(taskService.startTask(id));
     }
 
-    @PutMapping(value = "/stop")
-    public ResponseEntity<?> stopTask(){
-        taskService.stopTask();
-        return ResponseEntity.ok().body("Task stopped");
+    @PutMapping(value = "/finish/{id}")
+    public ResponseEntity<TaskProjection> finishTask(@PathVariable Long id){
+        return ResponseEntity.ok(taskService.finishTask(id));
     }
+
+
+    @PutMapping(value = "/stop/{id}")
+    public ResponseEntity<TaskProjection> stopTask(@PathVariable Long id, @RequestBody ActualDuration actualDuration){
+        return ResponseEntity.ok().body(taskService.stopTask(id, actualDuration.actualDuration()));
+    }
+
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> editTask(@PathVariable Long id,@RequestBody TaskUpdateDTO taskUpdate) {
