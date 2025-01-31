@@ -37,9 +37,10 @@ public class UserController {
         return ResponseEntity.ok("User edited.");
     }
 
-    @DeleteMapping(value = "/user/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId){
-        userService.deleteUser(userId);
+    @DeleteMapping(value = "/profile")
+    public ResponseEntity<String> deleteUser(){
+        UserMinProjection user = userService.getProfile();
+        userService.deleteUser(user.getUserId());
         return ResponseEntity.ok("User deleted.");
     }
 }
