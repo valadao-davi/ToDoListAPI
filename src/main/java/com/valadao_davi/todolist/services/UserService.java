@@ -22,11 +22,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Transactional(readOnly = true)
-    public List<UserMinProjection> getAllSafeUsers(){
-        return userRepository.findAllBy().stream().toList();
-    }
+    
 
     @Transactional(readOnly = true)
     public UserMinProjection getProfile(){
