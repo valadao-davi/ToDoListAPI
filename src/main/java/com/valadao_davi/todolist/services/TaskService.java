@@ -23,9 +23,6 @@ import java.util.List;
 @Service
 public class TaskService {
 
-//    private volatile boolean startedTask = false;
-//    private Double globalDuration;
-
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
@@ -69,27 +66,6 @@ public class TaskService {
         return getById(id);
     }
 
-//    @Transactional
-//    public void counterMinutes(Long id, Double timeDuration){
-//        try {
-//            this.globalDuration = timeDuration;
-//            startedTask = true;
-//            while (globalDuration > 0) {
-//                if(!startedTask || Thread.currentThread().isInterrupted()){
-//                    throw new InterruptedException();
-//                }
-//                Thread.sleep(1000);
-//                globalDuration -= 0.0167;
-//            }
-//            if(globalDuration == 0){
-//                updateProgress(id, Status.DONE.name(), timeDuration);
-//            }
-//        } catch (InterruptedException e) {
-//            updateProgress(id, Status.PENDING.name(), globalDuration);
-//        } finally {
-//            startedTask = false;
-//        }
-//    }
 
     @Transactional
     public TaskProjection startTask(Long id) {

@@ -13,26 +13,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/profile")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/profile")
+    @GetMapping
     public ResponseEntity<?> getProfile(){
         UserMinProjection user = userService.getProfile();
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping(value = "/profile")
+    @PutMapping
     public ResponseEntity<String> editUser(@RequestBody UserCreateDTO userCreateDTO){
         UserMinProjection user = userService.getProfile();
         userService.editUser(userCreateDTO, user.getUserId());
         return ResponseEntity.ok("User edited.");
     }
 
-    @DeleteMapping(value = "/profile")
+    @DeleteMapping
     public ResponseEntity<String> deleteUser(){
         UserMinProjection user = userService.getProfile();
         userService.deleteUser(user.getUserId());

@@ -9,7 +9,6 @@ import com.valadao_davi.todolist.projections.UserMinProjection;
 import com.valadao_davi.todolist.services.TaskService;
 import com.valadao_davi.todolist.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

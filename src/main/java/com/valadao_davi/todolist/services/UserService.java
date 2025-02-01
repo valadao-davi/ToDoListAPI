@@ -22,7 +22,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
 
     @Transactional(readOnly = true)
     public UserMinProjection getProfile(){
