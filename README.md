@@ -1,10 +1,11 @@
 # TimerToDo API
 
-The Timer API is a RESTful API built with Java Spring and PostgreSQL, designed for task management and time tracking in minutes. It allows you to create, view, edit, and delete tasks, while also tracking their duration in minutes with start/stop functionality. Tasks are initially created with a status of Pending, which changes to In Progress once the timer starts, and transitions to Done when the timer ends. This status tracking ensures that users can easily monitor the progress of their tasks. Scalable and efficient, this API is set to integrate into a full-stack project, offering essential tools for productivity and workflow management.
+The Timer API is a secure RESTful service built with Java Spring, PostgreSQL, and Spring Security, offering task management and time tracking in minutes. It includes user authentication (login/registration) via JWT tokens, ensuring secure access. Each user has a personalized profile and exclusive access to their task lists, with CRUD operations for tasks.
 
 
 # Features
 
+- **Login and Register**: Register and Login to see and managemeant your own tasks.
 - **Task Management**: Easily manage tasks with status tracking: Pending, In Progress, and Done.
 - **Time Tracking**: Track task duration in minutes with start/stop timers for precise time management.
 - **PostgreSQL Database**: A scalable database for storing task data, status, and time tracking in minutes.
@@ -12,6 +13,10 @@ The Timer API is a RESTful API built with Java Spring and PostgreSQL, designed f
 - **Future Scalability**: Ready for integration into a full-stack project for complete task and time management.
 - **Efficient API Design**: Built with Java Spring for high performance and easy integration.
 - **Architecture Pattern**: Built with the Controller-Service-Repository pattern for better maintainability and scalability.
+- **Spring Security**: All passwords are securely hashed before storage, ensuring maximum user security.
+
+
+
 # Setup
 
 ## 1. Clone repository
@@ -59,7 +64,124 @@ Open your browser and navigate to http://localhost:8080/tasks You should see you
 
 # API Documentation
 
-## Requests
+## Requests Users 
+Requests to the API should follow these standards:
+| Method | Description |
+|---|---|
+| `GET` | Retrieve the logged-in user's profile. |
+| `POST` | Register and Login |
+| `PUT` | Update the logged-in user's profile. |
+| `DELETE` | Delete the logged-in user's account. |
+
+
+## Retrieve (Get) [GET  /profile]
+
+### Retrive user safe logged-in information:
+- **Authentication:** Necessary
+  - **Type:** Bearer Token
+  - **Header:** `Authorization: Bearer <token>`
+```
+GET https://todolistapi-9n7j.onrender.com/profile
+```
++ Example response:
+```json    
+{
+    "userId": 2,
+    "email": "john.doe10@example.com",
+    "userName": "Davi"
+}
+ ```
+
+## Register (Post) [POST /auth/register]:
+
+### Register the user in the server:
+```
+POST https://todolistapi-9n7j.onrender.com/auth/register
+```
+
++ Body:
+```json    
+{
+    "userName": "Davi",
+    "email": "john.doe10@example.com",
+    "password": "password12345678910"
+}
+ ```
+
++ Example response:
+```    
+User registered
+ ```
+
+
+## Login (Post) [Post  /auth/login]
+
+### Log the user and retrieve a token to acess other endpoints:
+```
+POST https://todolistapi-9n7j.onrender.com/auth/login
+```
+
++ Body:
+```json    
+{
+    "email": "john.doe10@example.com",
+    "password": "password12345678910"
+}
+ ```
++ Example response:
+```json    
+{
+    "token": "Token"
+}
+ ```
+
+## Edit (Put) [PUT  /profile]
+
+### Edit logged-in user:
+- **Authentication:** Necessary
+  - **Type:** Bearer Token
+  - **Header:** `Authorization: Bearer <token>`
+#### Note: All fields are optional. You can update any of them or leave them unchanged.
+
+```
+```http
+PUT https://todolistapi-9n7j.onrender.com/profile
+```
+
++ Body:
+```json    
+{
+    "userName": "Davi100"
+}
+ ```
+
+ + Example response:
+```    
+User Edited.
+ ```
+
+## Delete (Delete) [DELETE  /profile]
+
+### Delete User Logged-in
+- **Authentication:** Necessary
+  - **Type:** Bearer Token
+  - **Header:** `Authorization: Bearer <token>`
+
+```http
+DELETE https://todolistapi-9n7j.onrender.com/profile
+```
+
+ + Example response:
+```    
+User deleted.
+ ```
+
+
+## Requests Tasks (All these endpoints require an bearer Token given by login):
+- **Authentication:** Necessary
+  - **Type:** Bearer Token
+  - **Header:** `Authorization: Bearer <token>`
+
 Requests to the API should follow these standards:
 | Method | Description |
 |---|---|
@@ -71,7 +193,7 @@ Requests to the API should follow these standards:
 
 ## Read (Get) [GET  /tasks]
 
-### Read all tasks:
+### Read all tasks of User Logged-in:
 ```
 GET https://todolistapi-9n7j.onrender.com/tasks
 ```
@@ -82,19 +204,21 @@ GET https://todolistapi-9n7j.onrender.com/tasks
         "idTask": 1,
         "nameTask": "Clean room",
         "durationTask": 10,
-        "priority": "LOW"
+        "priority": "LOW",
+        "status": "PENDING"
     },
 
     {
         "idTask": 2,
         "nameTask": "Finish home lesson",
         "durationTask": 60,
-        "priority": "HIGH"
+        "priority": "HIGH",
+        "status": "PENDING"
     }
 ]
  ```
 
-### Read task by id:
+### Read task of user logged in by id:
 ```
 GET https://todolistapi-9n7j.onrender.com/tasks/:id
 ```
@@ -104,7 +228,9 @@ GET https://todolistapi-9n7j.onrender.com/tasks/:id
     "idTask": 1,
     "nameTask": "Clean room",
     "durationTask": 10,
-    "priority": "HIGH"
+    "priority": "HIGH",
+    "status": "PENDING"
+
 }
 
  ```
@@ -120,9 +246,11 @@ GET https://todolistapi-9n7j.onrender.com/tasks/:id
 + Body:
 ```json    
 {
+    "idTask": 3,
     "nameTask": "Study & Pratice Java",
     "durationTask": 30,
-    "priority": "HIGH"
+    "priority": "HIGH",
+    "status": pending
 }
  ```
 
@@ -138,7 +266,7 @@ Task created.
 ## Edit (Put) [PUT  /tasks]
 
 
-### Edit a task
+### Edit a task of user logged-in
 #### Note: All fields are optional. You can update any of them or leave them unchanged, limited to these only.
 + Body:
     ```json    
@@ -161,46 +289,88 @@ Task Edited.
 
 ### Start a task
 
-#### Note: The request stays active until the task finishes, deducting 0.016 minutes per second. It stops if an error occurs or when stopped. Only one task can be active at a time.
+#### Note: The request remains active until the task is either manually stopped or completed.
 
 ```http
 PUT https://todolistapi-9n7j.onrender.com/tasks/start/:id
 ```
 
- + Example response when duration is finished:
-```    
-Done task.
+
+
+ + Example response:
+
+```json    
+{
+    "priority": "HIGH",
+    "nameTask": "Clean room",
+    "durationTask": 10.0,
+    "idTask": 2,
+    "status": "IN_PROGRESS"
+}
  ```
 
- + Example response when duration is interrupted:
-```    
-Task interrupted.
- ```
 
 
 ### Stop a task
 
-#### Note: This request only works if a task is running. If no task is active, it will return a 406 (Not Acceptable) code.
+#### Note: This request only works if a task is in IN_PROGRESS status. If no task is active, it will return a 404 (Not Found) code.
 
 ```http
 PUT https://todolistapi-9n7j.onrender.com/tasks/stop/:id
 ```
 
++ Body:
+    ```json    
+        {
+            "actualDuration": 6.5
+        }
+    ```
+
  + Example response when a task is active:
-```    
-Task stopped.
+```json    
+{
+    "priority": "HIGH",
+    "nameTask": "Clean room",
+    "durationTask": 3.5,
+    "idTask": 2,
+    "status": "PENDING"
+}
  ```
 
  + Example response when there's no task active:
-```    
-There's no task to stop.
+```json    
+{
+    "status": "NOT_FOUND",
+    "message": "There's no task to stop"
+}
  ```
+
+### Finish a task
+
+#### Note: This request only works if request is in IN_PROGRESS status. If no task is active, it will return a 404 (Not Found) code.
+
+```http
+PUT https://todolistapi-9n7j.onrender.com/tasks/finish/:id
+```
+
+ + Example response:
+
+```json    
+{
+    "priority": "HIGH",
+    "nameTask": "Clean room",
+    "durationTask": 10.0,
+    "idTask": 2,
+    "status": "DONE"
+}
+ ```
+
 
 
 ## Remove (Delete) [DELETE  /tasks]
 
 
-### Remove a task by Id
+### Remove a task by Id based in user logged-in
 
 
 ```http
